@@ -46,12 +46,12 @@ module Systemjs
       end
 
       def process_data(data)
-        build_file = File.expand_path('javascripts/build.js', File.dirname(__FILE__))
-
         module_name = Systemjs::Rails.builder_config.module_name(@filename)
 
         # Do nothing if this file is outside the SystemJS configured directories
         return data unless module_name
+
+        build_file = File.expand_path('javascripts/build.js', File.dirname(__FILE__))
 
         output = @cache.fetch(@cache_key + [data]) do
           io = IO.popen(['node', build_file, module_name], {err: [:child, :out]})
@@ -60,11 +60,18 @@ module Systemjs
           JSON.parse(output)
         end
 
+        @required << polyfill_file_path + "?type=application/javascript&skip_bundle"
         @required += output['requires'].map do |file|
           file.gsub(/^file:/, 'file://') + "?type=application/javascript&skip_bundle"
         end
 
         output['source']
+      end
+
+      private
+
+      def polyfill_file_path
+        'file://' + File.expand_path('../../assets/javascripts/systemjs-polyfill.js', File.dirname(__FILE__))
       end
 
     end

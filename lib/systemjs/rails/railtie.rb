@@ -6,18 +6,23 @@ module Systemjs
     class Railtie < ::Rails::Railtie
       config.system_js = ActiveSupport::OrderedOptions.new
 
-      config.system_js.config_file_path = '/Users/tonymarklove/Web/es6-test/app/assets/javascripts/config.js'
-      config.system_js.base_path = '/Users/tonymarklove/Web/es6-test/app/assets/javascripts'
-
-      config.system_js.builder_config = Systemjs::Rails::BuilderConfig.new(config.system_js)
+      config.system_js.config_file_path = 'config/systemjs/config.js'
+      config.system_js.package_dir = 'vendor/assets/javascripts/jspm_packages'
 
       initializer :setup_system_js, group: :all do |app|
+        config = app.config.system_js
+
+        config.base_path = File.dirname(app.root.join(config.config_file_path))
+
         if app.assets
-          app.assets.append_path '/Users/tonymarklove/Web/es6-test/public/jspm_packages'
+          app.assets.append_path(app.root.join(config.package_dir))
           app.assets.register_preprocessor 'application/javascript', Systemjs::Rails::Processor
 
-          Systemjs::Rails.builder_config = app.config.system_js.builder_config
+          # Add path for the SystemJS polyfill
+          app.assets.append_path(File.expand_path('../../assets/javascripts', File.dirname(__FILE__)))
         end
+
+        Systemjs::Rails.builder_config = Systemjs::Rails::BuilderConfig.new(config)
       end
     end
   end
