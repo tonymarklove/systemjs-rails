@@ -5,10 +5,10 @@ Gem::Specification.new do |s|
   s.name    = 'systemjs-rails'
   s.version = Systemjs::Rails::VERSION
 
-  s.homepage    = "http://github.com/josh/sprockets-es6"
+  s.homepage    = "http://github.com/jjbananas/systemjs-rails"
   s.summary     = "SystemJS for the Asset pipeline and sprockets"
   s.description = <<-EOS
-    A Sprockets transformer that converts ES6 code into vanilla ES5 with 6to5.
+    Bringing SystemJS and JSPM to the Rails asset pipeline.
   EOS
   s.license = "MIT"
 

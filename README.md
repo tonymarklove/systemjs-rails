@@ -1,32 +1,10 @@
-# Sprockets ES6
+# SystemJS Rails
 
-A Sprockets transformer that converts ES6 code into vanilla ES5 with [6to5](https://6to5.github.io).
+Bringing SystemJS and JSPM to the Rails asset pipeline..
 
 ## Usage
 
 ``` ruby
 # Gemfile
-gem 'sprockets'
-gem 'sprockets-es6'
+gem 'systemjs-rails'
 ```
-
-
-``` ruby
-require 'sprockets/es6'
-```
-
-``` js
-// app.es6
-
-square = (x) => x * x
-
-class Animal {
-  constructor(name) {
-    this.name = name
-  }
-}
-```
-
-## Caveats
-
-Requires Sprockets 3 betas.
