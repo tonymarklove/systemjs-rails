@@ -51,13 +51,18 @@ module Systemjs
         # Do nothing if this file is outside the SystemJS configured directories
         return data unless module_name
 
-        build_file = File.expand_path('javascripts/build.js', File.dirname(__FILE__))
+        combined_js = "#{config_script}\n\n#{build_script}"
 
         output = @cache.fetch(@cache_key + [data]) do
-          io = IO.popen(['node', build_file, module_name], {err: [:child, :out]})
-          output = io.read
-          io.close
-          JSON.parse(output)
+          tmpfile = write_to_tempfile(combined_js)
+          begin
+            io = IO.popen(['node', tmpfile.path, module_name], {err: [:child, :out]})
+            output = io.read
+            io.close
+            JSON.parse(output)
+          ensure
+            File.unlink(tmpfile)
+          end
         end
 
         @required << polyfill_file_path + "?type=application/javascript&skip_bundle"
@@ -70,8 +75,38 @@ module Systemjs
 
       private
 
+      def config_script
+        "var opts = {
+          config: #{Systemjs::Rails.builder_config.system_config.to_json}
+        };"
+      end
+
+      def build_script
+        @build_file ||= File.read(build_file)
+      end
+
+      def build_file
+        File.expand_path('javascripts/build.js', File.dirname(__FILE__))
+      end
+
       def polyfill_file_path
         'file://' + File.expand_path('../../assets/javascripts/systemjs-polyfill.js', File.dirname(__FILE__))
+      end
+
+      def create_tempfile
+        mode = File::WRONLY | File::CREAT | File::EXCL
+        File.open(temp_file_path, mode, 0600)
+      end
+
+      def write_to_tempfile(contents)
+        tmpfile = create_tempfile
+        tmpfile.write(contents)
+        tmpfile.close
+        tmpfile
+      end
+
+      def temp_file_path
+        File.expand_path("../../../tmp/#{SecureRandom.urlsafe_base64}", File.dirname(__FILE__))
       end
 
     end

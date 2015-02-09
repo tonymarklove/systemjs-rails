@@ -12,6 +12,8 @@ Gem::Specification.new do |s|
   EOS
   s.license = "MIT"
 
+  s.extensions = ['Rakefile']
+
   s.files = [
     'lib/systemjs.rb',
     'lib/systemjs/rails.rb',
