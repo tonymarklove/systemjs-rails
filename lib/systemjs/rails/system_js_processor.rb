@@ -15,7 +15,8 @@ module Systemjs
         @cache_key = [
           self.class.name,
           VERSION,
-          @options
+          @options,
+          Systemjs::Rails.builder_config.cache_key
         ].freeze
       end
 

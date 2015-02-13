@@ -1,3 +1,5 @@
+require 'digest/sha1'
+
 module Systemjs
   module Rails
     class BuilderConfig
@@ -30,6 +32,10 @@ module Systemjs
           config['paths'] = expand_paths(config['paths'])
           config
         end
+      end
+
+      def cache_key
+        Digest::SHA1.hexdigest(config_script)
       end
 
       private
