@@ -1,0 +1,9 @@
+{
+  "jspm": {
+    "directories": {
+      "baseURL": "config/systemjs",
+      "lib": "app/assets/javascripts/app",
+      "packages": "vendor/assets/javascripts/jspm_packages"
+    }
+  }
+}

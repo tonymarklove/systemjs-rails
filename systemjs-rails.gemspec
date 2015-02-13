@@ -14,16 +14,7 @@ Gem::Specification.new do |s|
 
   s.extensions = ['Rakefile']
 
-  s.files = [
-    'lib/systemjs.rb',
-    'lib/systemjs/rails.rb',
-    'lib/systemjs/rails/version.rb',
-    'lib/systemjs/rails/railtie.rb',
-    'lib/systemjs/rails/builder_config.rb',
-    'lib/systemjs/rails/system_js_processor.rb',
-    'LICENSE',
-    'README.md'
-  ]
+  s.files = Dir.glob("{lib}/**/*.rb")
 
   s.add_dependency 'execjs'
   s.add_dependency 'sprockets', '~> 3.0.0.beta'
